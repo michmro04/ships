@@ -1,6 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include <iostream>
+using namespace std;
 
 class Board{
 public:
@@ -22,11 +23,14 @@ private:
 public:
     Board();
     void printBoard();
-    char convertStateToChar(TileState state);
+    string convertStateToEmoji(TileState state);
 
     bool canPlaceShip(int row, int col, int length, Direction dir);
     bool placeShip(int row, int col, int length, Direction dir);
-
     void autoPlacingShips();
+
+    TileState shoot(int row, int col);
+
+    bool isWin();
 };
 #endif

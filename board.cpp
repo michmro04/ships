@@ -1,6 +1,7 @@
 #include "board.h"
 #include <cstdlib>
 #include <algorithm>
+#include <string>
 using namespace std;
 
 Board::Board(){
@@ -12,23 +13,23 @@ Board::Board(){
     }
 }
 
-char Board::convertStateToChar(TileState state){
+string Board::convertStateToEmoji(TileState state){
     switch (state){
-        case TileState::WATER: return '~';
-        case TileState::SHIP: return 'S';
-        case TileState::HIT: return 'X';
-        case TileState::MISS: return 'O';
-        default: return '?';
+        case TileState::WATER: return "🌊";
+        case TileState::SHIP: return "🛳️";
+        case TileState::HIT: return "💥";
+        case TileState::MISS: return "❌";
+        default: return "❔";
     }
 }
 
 void Board::printBoard(){
-    cout<<"   A B C D E F G H I J" << endl;
+    cout<<"   A  B  C  D  E  F  G  H  I  J" << endl;
     for(int i=0; i<10; i++){
         if (i<9) cout << i+1 << ' ';
         else cout << i+1;
         for (int j = 0; j < 10; j++){
-            cout << " " << convertStateToChar(grid[i][j]);
+            cout << " " << convertStateToEmoji(grid[i][j]);
         }
         cout<<endl;
     }
@@ -64,8 +65,6 @@ bool Board::canPlaceShip(int row, int col, int length, Direction dir){
             if(grid[r][c] != TileState::WATER) return false;
         }
     }
-
-
     return true;
 }
 
@@ -112,7 +111,27 @@ void Board::autoPlacingShips(){
     }
 }
 
+Board::TileState Board::shoot(int row, int col){
+    if(row<0 || row>9 || col<0 || col<9);
 
+    TileState current = grid[row][col];
+
+    if(current == TileState::WATER){
+        grid[row][col]=TileState::MISS;
+    } else if(current == TileState::SHIP){
+        grid[row][col] = TileState::HIT;
+    }
+    return current;
+}
+
+bool Board::isWin(){
+    for(int i=0; i<10; i++){
+        for(int j=0; j<10; j++){
+            if(grid[i][j]==TileState::SHIP) return false;
+        }
+    }
+    return true;
+}
 
 
 
