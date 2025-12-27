@@ -11,7 +11,7 @@ public:
         MISS,   //3
     };
 
-    enum class Direcrion{
+    enum class Direction{
         HORIZONTAL, //0
         VERTICAL,   //1
     };
@@ -24,7 +24,7 @@ public:
     void printBoard();
     char convertStateToChar(TileState state);
 
-    bool canPlaceShip(int row, int col, int length, Direcrion dir);
-    bool placeShip(int row, int col, int length, Direcrion dir);
+    bool canPlaceShip(int row, int col, int length, Direction dir);
+    bool placeShip(int row, int col, int length, Direction dir);
 };
 #endif

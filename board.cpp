@@ -21,7 +21,6 @@ char Board::convertStateToChar(TileState state){
 }
 
 void Board::printBoard(){
-    cout << " " << convertStateToChar(grid[0][0]);
     cout<<"   A B C D E F G H I J" << endl;
     for(int i=0; i<10; i++){
         if (i<9) cout << i+1 << ' ';
@@ -34,23 +33,43 @@ void Board::printBoard(){
 
 }
 
-bool Board::canPlaceShip(int row, int col, int length, Direcrion dir){
+bool Board::canPlaceShip(int row, int col, int length, Direction dir){
+    //board's borders
+    if(row<0 || row>9 || col<0 || col>9) return false;
 
+    if(dir == Direction::HORIZONTAL){
+        if((col+length)>10) return false;
+    }else{    //dir == Direction::VERTICAL
+        if((row+length)>10) return false;
+    }
+    
+    //other ships collisions
+    for(int i=0; i<length; i++){
+        if(dir == Direction::HORIZONTAL){
+            if(grid[row][col+i] != TileState::WATER) return false;
+        } else {
+            if(grid[row+i][col] != TileState::WATER) return false;
+        }
+    }
+    return true;
 }
 
 
-bool Board::placeShip(int row, int col, int length, Direcrion dir){
-    if(canPlaceShip){
+bool Board::placeShip(int row, int col, int length, Direction dir){
+    if(canPlaceShip(row, col, length, dir)){
         switch (dir){
-        case Direcrion::HORIZONTAL:
+        case Direction::HORIZONTAL:
             for(int i=0; i<length; i++)
                 grid[row][col+i]=TileState::SHIP;
             break;
-        case Direcrion::VERTICAL:
+        case Direction::VERTICAL:
             for(int i=0; i<length; i++)
-                grid[row+1][col]=TileState::SHIP;
-            break;        
+                grid[row+i][col]=TileState::SHIP;
+            break;
+        }   
+        return true;        
     }
+    return false;
 }
 
 
