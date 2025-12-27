@@ -1,6 +1,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 #include <iostream>
+#include "ship.h"
+#include <vector>
 using namespace std;
 
 class Board{
@@ -17,12 +19,14 @@ public:
         VERTICAL,   //1
     };
 
+    vector<Ship> ships;
+
 private:
     TileState grid[10][10];
 
 public:
     Board();
-    void printBoard();
+    void printBoard(bool showShips=false);
     string convertStateToEmoji(TileState state);
 
     bool canPlaceShip(int row, int col, int length, Direction dir);

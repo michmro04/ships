@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <algorithm>
 #include <string>
+#include <vector>
+#include "ship.h"
 using namespace std;
 
 Board::Board(){
@@ -15,21 +17,28 @@ Board::Board(){
 
 string Board::convertStateToEmoji(TileState state){
     switch (state){
-        case TileState::WATER: return "🌊";
-        case TileState::SHIP: return "🛳️";
+        case TileState::WATER: return "🟦";
+        case TileState::SHIP: return "🚢";
         case TileState::HIT: return "💥";
         case TileState::MISS: return "❌";
         default: return "❔";
     }
 }
 
-void Board::printBoard(){
+void Board::printBoard(bool showShips){
     cout<<"   A  B  C  D  E  F  G  H  I  J" << endl;
     for(int i=0; i<10; i++){
         if (i<9) cout << i+1 << ' ';
         else cout << i+1;
+
         for (int j = 0; j < 10; j++){
-            cout << " " << convertStateToEmoji(grid[i][j]);
+            string emoji = convertStateToEmoji(grid[i][j]);
+
+            if(!showShips && grid[i][j]==TileState::SHIP){
+                emoji = "🟦";
+            }
+
+            cout << emoji << " ";
         }
         cout<<endl;
     }
@@ -118,8 +127,12 @@ Board::TileState Board::shoot(int row, int col){
 
     if(current == TileState::WATER){
         grid[row][col]=TileState::MISS;
+        return TileState::MISS;
     } else if(current == TileState::SHIP){
         grid[row][col] = TileState::HIT;
+        return TileState::HIT;
+    } else if( current == TileState::HIT || current == TileState::MISS){
+        return current;
     }
     return current;
 }
