@@ -1,4 +1,6 @@
 #include "board.h"
+#include <cstdlib>
+#include <algorithm>
 using namespace std;
 
 Board::Board(){
@@ -42,15 +44,28 @@ bool Board::canPlaceShip(int row, int col, int length, Direction dir){
     }else{    //dir == Direction::VERTICAL
         if((row+length)>10) return false;
     }
-    
-    //other ships collisions
-    for(int i=0; i<length; i++){
-        if(dir == Direction::HORIZONTAL){
-            if(grid[row][col+i] != TileState::WATER) return false;
-        } else {
-            if(grid[row+i][col] != TileState::WATER) return false;
+
+    //other ships collisions or neighborhood using frame
+    int rowStart = max(0,row-1);
+    int colStart = max(0,col-1);
+
+    int rowEnd, colEnd;
+
+    if(dir==Direction::HORIZONTAL){
+        rowEnd = min(9, row+1);
+        colEnd = min(9, col+length);
+    } else{
+        rowEnd = min(9, row+length);
+        colEnd = min(9, col+1);
+    }
+
+    for(int r=rowStart; r<=rowEnd; r++){
+        for(int c=colStart; c<=colEnd; c++){
+            if(grid[r][c] != TileState::WATER) return false;
         }
     }
+
+
     return true;
 }
 
@@ -71,6 +86,33 @@ bool Board::placeShip(int row, int col, int length, Direction dir){
     }
     return false;
 }
+
+void Board::autoPlacingShips(){
+    int ships = 10; //numbers of ships
+
+    for(int i=0; i<ships; i++){
+        bool success = false;
+        while(!success){
+            int genRow = rand()%10;
+            int genCol = rand()%10;
+            
+            Direction dir;
+            int a = rand()%2;
+            if(a==0) dir=Direction::HORIZONTAL;
+            else dir=Direction::VERTICAL;
+            
+            int size;
+            if(i<1) size = 4;   //4S ship
+            else if(i<3) size = 3;    //3S ship
+            else if(i<6) size = 2;    //2S ship
+            else if(i<10) size = 1;    //1S ship
+            
+            if(placeShip(genRow, genCol, size, dir)) success=true;
+        }
+    }
+}
+
+
 
 
 

@@ -26,5 +26,7 @@ public:
 
     bool canPlaceShip(int row, int col, int length, Direction dir);
     bool placeShip(int row, int col, int length, Direction dir);
+
+    void autoPlacingShips();
 };
 #endif
